@@ -1,4 +1,4 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 import httpx
 
@@ -7,11 +7,22 @@ import httpx
 class IBGEClient:
     BASE_URL: str = "https://servicodados.ibge.gov.br/api/"
     timeout: float = 15
-    headers: dict[str, str] = {"Accept": "application/json"}
-    limits: httpx.Limits = httpx.Limits(
-        max_connections=20, max_keepalive_connections=10
+    headers: dict[str, str] = field(
+        default_factory=lambda: {"Accept": "application/json"}
+    )
+    limits: httpx.Limits = field(
+        default_factory=lambda: httpx.Limits(
+            max_connections=20,
+            max_keepalive_connections=10,
+        )
     )
     _client: httpx.AsyncClient | None = None
+
+    async def __aenter__(self):
+        self._client = httpx.AsyncClient(
+            timeout=self.timeout, headers=self.headers, limits=self.limits
+        )
+        return self
 
     async def __aexit__(self, exc_type, exc, tb) -> None:
         await self.aclose()
@@ -21,7 +32,7 @@ class IBGEClient:
             await self._client.aclose()
             self._client = None
 
-    async def get(self, path: str, *, params: dict | None = None) -> object:
+    async def get(self, path: str, *, params: dict | None = None):
         if self._client is None:
             raise RuntimeError(
                 "Use 'async with IBGEClient() as c' para inicializar o client"
