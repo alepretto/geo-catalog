@@ -6,6 +6,7 @@ import polars as pl
 
 from src.domain.country import Country
 from src.providers.ibge import IBGEClient
+from src.storage import minio_client
 from src.storage.minio_client import MinioClient
 
 
@@ -28,12 +29,6 @@ async def sync(local_data_path: str):
         )
         for raw in raw_data
     ]
-
-    minio_client = MinioClient(
-        endpoint=os.getenv("MINIO_ENDPOINT", ""),
-        access_key=os.getenv("MINIO_ACCESS_KEY", ""),
-        secret_key=os.getenv("MINIO_SECRET_KEY", ""),
-    )
 
     upload_countries(countries, minio_client, local_data_path)
 
