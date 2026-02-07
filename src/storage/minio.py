@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 from minio import Minio
@@ -18,3 +19,10 @@ class MinioClient:
     def download_file(self, bucket: str, object_name: str, file_path: str):
         Path(file_path).parent.mkdir(parents=True, exist_ok=True)
         self.client.fget_object(bucket, object_name, file_path)
+
+
+minio_client = MinioClient(
+    endpoint=os.getenv("MINIO_ENDPOINT", ""),
+    access_key=os.getenv("MINIO_ACCESS_KEY", ""),
+    secret_key=os.getenv("MINIO_SECRET_KEY", ""),
+)

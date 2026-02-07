@@ -6,8 +6,7 @@ import polars as pl
 
 from src.domain.country import Country
 from src.providers.ibge import IBGEClient
-from src.storage import minio_client
-from src.storage.minio_client import MinioClient
+from src.storage.minio import MinioClient, minio_client
 
 
 async def sync(local_data_path: str):
