@@ -49,7 +49,7 @@ def save_cities_as_local_parquet(cities: list[City], path: str):
     schema = {
         "id_city": pl.Int64,
         "name": pl.Utf8,
-        "micro_region": pl.Utf8,
+        "intermediate_region": pl.Utf8,
         "id_state": pl.Int64,
     }
     rows = [asdict(city) for city in cities]
