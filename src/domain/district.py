@@ -3,6 +3,6 @@ from dataclasses import dataclass
 
 @dataclass(slots=True)
 class District:
-    id_distric: int
+    id_district: int
     name: str
     id_city: int

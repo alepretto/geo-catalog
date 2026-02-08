@@ -23,7 +23,7 @@ async def sync(local_data_path: str):
 
             districs = [
                 District(
-                    id_distric=raw["id"],
+                    id_district=raw["id"],
                     name=raw["nome"],
                     id_city=raw["municipio"]["id"],
                 )
@@ -64,10 +64,10 @@ def upload_districs(
     list_districs: list[District], minio: MinioClient, local_data_path: str
 ):
 
-    path = f"{local_data_path}/br/districs.parquet"
+    path = f"{local_data_path}/br/districts.parquet"
 
     save_districs_as_local_parquet(list_districs, path)
 
     bucket = os.getenv("BUCKET", "")
-    object_name = "/br/districs.parquet"
+    object_name = "/br/districts.parquet"
     minio.upload_file(bucket, object_name, path)
